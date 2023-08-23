@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 150px;
+        }
+        .login {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .login h1 {
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .login p {
+            margin-bottom: 10px;
+            color: #777;
+        }
+
+        .login input[type="text"],
+        .login input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .login button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .login button:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            margin-bottom: 10px;
+            color: red;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login">
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
+        </div>
+        <h2>European University of Lefke</h2>
+        <br>
+        <h2>Login Page</h2>
+        <br>
+        <form id="loginForm" action="register.php" method="post">
+            <input type="text" name="user" id="userNameInput" placeholder="User Name" required>
+            <input type="password" name="password" id="passwordInput" placeholder="Password" required>
+            <button name="henry" type="submit">Login</button>
+        </form>
+        <div id="errorMessage" class="error-message"></div>
+    </div>
+
+    <script>
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var xmlData = this.responseXML;
+                processData(xmlData);
+            }
+        };
+        xhttp.open("GET", "student.xml", true);
+        xhttp.send();
+
+        function processData(xmlData) {
+            var students = xmlData.getElementsByTagName("Student");
+            var form = document.getElementById("loginForm");
+            form.addEventListener("submit", function (event) {
+                event.preventDefault(); // Block the form submission
+
+                var userNameInput = document.getElementById("userNameInput");
+                var passwordInput = document.getElementById("passwordInput");
+
+                var userName = userNameInput.value;
+                var password = passwordInput.value;
+
+                var isValid = false;
+                for (var i = 0; i < students.length; i++) {
+                    var student = students[i];
+                    var studentNo = student.getElementsByTagName("StudentNo")[0].textContent;
+                    var name = student.getElementsByTagName("Name")[0].textContent;
+                    var surname = student.getElementsByTagName("Surname")[0].textContent;
+                    var program = student.getElementsByTagName("Program")[0].textContent;
+
+                    if (userName === name && password === studentNo) {
+                        isValid = true;
+                        break;
+                    }
+                }
+
+                if (isValid) {
+                    form.submit(); // Send the form
+                } else {
+                    alert("Invalid username or password");
+                }
+            });
+        }
+
+        
+
+    </script>
+</body>
+
+</html>
